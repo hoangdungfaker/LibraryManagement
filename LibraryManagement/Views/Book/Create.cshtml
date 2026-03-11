@@ -1,0 +1,50 @@
+﻿@model LibraryManagement.Models.Entities.Sach
+
+@{
+    ViewData["Title"] = "Thêm sách";
+}
+
+<h2 class="fw-bold text-primary mb-4">➕ Thêm sách mới</h2>
+
+<form asp-action="Create" method="post">
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="TenSach" class="form-label">Tên sách</label>
+            <input asp-for="TenSach" class="form-control" />
+            <span asp-validation-for="TenSach" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="TacGia" class="form-label">Tác giả</label>
+            <input asp-for="TacGia" class="form-control" />
+            <span asp-validation-for="TacGia" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="TheLoai" class="form-label">Thể loại</label>
+            <input asp-for="TheLoai" class="form-control" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="NhaXuatBan" class="form-label">Nhà xuất bản</label>
+            <input asp-for="NhaXuatBan" class="form-control" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="NamXuatBan" class="form-label">Năm xuất bản</label>
+            <input asp-for="NamXuatBan" class="form-control" type="number" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="ViTri" class="form-label">Vị trí</label>
+            <input asp-for="ViTri" class="form-control" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Lưu</button>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

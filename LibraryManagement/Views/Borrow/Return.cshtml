@@ -1,0 +1,46 @@
+﻿@model LibraryManagement.Models.ViewModels.ReturnBookViewModel
+
+@{
+    ViewData["Title"] = "Trả sách";
+    var phieu = ViewBag.Phieu as LibraryManagement.Models.Entities.PhieuMuon;
+    var chiTiet = ViewBag.ChiTiet as LibraryManagement.Models.Entities.ChiTietPhieuMuon;
+}
+
+<h2 class="fw-bold text-danger mb-4">📚 Trả sách</h2>
+
+@if (phieu != null && chiTiet != null)
+{
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <p><strong>Mã phiếu:</strong> @phieu.MaPhieu</p>
+            <p><strong>Độc giả:</strong> @phieu.TheThuVien?.DocGia?.TaiKhoan?.HoTen</p>
+            <p><strong>Tên sách:</strong> @chiTiet.CuonSach?.Sach?.TenSach</p>
+            <p><strong>Mã cuốn:</strong> @chiTiet.MaCuon</p>
+            <p><strong>Hạn trả:</strong> @phieu.HanTra.ToString("dd/MM/yyyy")</p>
+        </div>
+    </div>
+}
+
+<form asp-action="Return" method="post">
+    <input type="hidden" asp-for="MaPhieu" />
+    <input type="hidden" asp-for="MaCuon" />
+
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="mb-3">
+        <label asp-for="TinhTrang" class="form-label">Tình trạng sách khi trả</label>
+        <select asp-for="TinhTrang" class="form-select">
+            <option value="BinhThuong">Bình thường</option>
+            <option value="HuHong">Hư hỏng</option>
+            <option value="Mat">Mất</option>
+        </select>
+        <span asp-validation-for="TinhTrang" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-danger">Xác nhận trả sách</button>
+    <a asp-action="ReturnList" class="btn btn-secondary">Quay lại</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

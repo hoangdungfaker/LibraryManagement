@@ -1,0 +1,36 @@
+﻿@model LibraryManagement.Models.ViewModels.StaffFormViewModel
+
+@{
+    ViewData["Title"] = "Thêm nhân viên";
+}
+
+<h2 class="fw-bold text-warning mb-4">➕ Thêm nhân viên</h2>
+
+<form asp-action="Create" method="post">
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="MaTaiKhoan" class="form-label">Tài khoản</label>
+            <select asp-for="MaTaiKhoan" class="form-select">
+                <option value="">-- Chọn tài khoản --</option>
+                @foreach (var tk in Model.DanhSachTaiKhoan)
+                {
+                    <option value="@tk.MaTaiKhoan">@tk.HoTen - @tk.Email</option>
+                }
+            </select>
+            <span asp-validation-for="MaTaiKhoan" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="ChucVu" class="form-label">Chức vụ</label>
+            <input asp-for="ChucVu" class="form-control" />
+            <span asp-validation-for="ChucVu" class="text-danger"></span>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-warning">Lưu</button>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

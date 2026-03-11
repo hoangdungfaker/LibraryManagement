@@ -1,0 +1,61 @@
+﻿@model List<LibraryManagement.Models.Entities.PhieuMuon>
+
+@{
+    ViewData["Title"] = "Gia hạn mượn";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="fw-bold text-warning">🔄 Danh sách phiếu có thể gia hạn</h2>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning">Không có phiếu nào có thể gia hạn.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Mã phiếu</th>
+                    <th>Độc giả</th>
+                    <th>Nhân viên</th>
+                    <th>Ngày mượn</th>
+                    <th>Hạn trả</th>
+                    <th>Số lần gia hạn</th>
+                    <th>Trạng thái</th>
+                    <th>Chức năng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.MaPhieu</td>
+                        <td>@item.TheThuVien?.DocGia?.TaiKhoan?.HoTen</td>
+                        <td>@item.NhanVien?.TaiKhoan?.HoTen</td>
+                        <td>@item.NgayMuon.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@item.HanTra.ToString("dd/MM/yyyy")</td>
+                        <td>@item.SoLanGiaHan</td>
+                        <td>@item.TrangThai</td>
+                        <td>
+                            <a asp-action="Renew" asp-route-id="@item.MaPhieu" class="btn btn-warning btn-sm">
+                                Gia hạn
+                            </a>
+                            <a asp-action="Details" asp-route-id="@item.MaPhieu" class="btn btn-info btn-sm text-white">
+                                Chi tiết
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

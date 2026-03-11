@@ -1,0 +1,23 @@
+﻿@model LibraryManagement.Models.Entities.DocGia
+
+@{
+    ViewData["Title"] = "Chi tiết độc giả";
+}
+
+<h2 class="fw-bold text-info mb-4">👨‍🎓 Chi tiết độc giả</h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <p><strong>Mã độc giả:</strong> @Model.MaDocGia</p>
+        <p><strong>Mã sinh viên:</strong> @Model.MaSinhVien</p>
+        <p><strong>Họ tên:</strong> @Model.TaiKhoan?.HoTen</p>
+        <p><strong>Email:</strong> @Model.TaiKhoan?.Email</p>
+        <p><strong>Ngày sinh:</strong> @Model.NgaySinh?.ToString("dd/MM/yyyy")</p>
+        <p><strong>Địa chỉ:</strong> @Model.DiaChi</p>
+
+        <p><strong>Số thẻ thư viện:</strong> @Model.TheThuViens.Count</p>
+
+        <a asp-action="Edit" asp-route-id="@Model.MaDocGia" class="btn btn-warning">Sửa</a>
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    </div>
+</div>

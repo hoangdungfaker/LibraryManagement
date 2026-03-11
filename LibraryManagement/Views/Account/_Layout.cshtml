@@ -1,0 +1,165 @@
+﻿@using Microsoft.AspNetCore.Http
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - LibraryManagement</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <style>
+        body {
+            margin: 0;
+            background: #f4f7fb;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .topbar {
+            background: linear-gradient(90deg, #0d47a1, #1565c0);
+            color: white;
+            padding: 12px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .brand {
+            font-size: 26px;
+            font-weight: 700;
+            color: white !important;
+            text-decoration: none;
+        }
+
+        .menu-link {
+            color: rgba(255,255,255,0.9) !important;
+            font-weight: 500;
+            margin-right: 10px;
+            border-radius: 8px;
+            padding: 8px 14px !important;
+            transition: 0.2s;
+        }
+
+            .menu-link:hover {
+                background: rgba(255,255,255,0.15);
+                color: white !important;
+            }
+
+        .user-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .user-badge {
+            background: rgba(255,255,255,0.15);
+            padding: 8px 12px;
+            border-radius: 999px;
+        }
+
+        .logout-btn {
+            background: #ef5350;
+            color: white !important;
+            border-radius: 8px;
+            padding: 8px 14px !important;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+            .logout-btn:hover {
+                background: #e53935;
+                color: white !important;
+            }
+
+        .page-wrapper {
+            padding: 30px 0;
+            min-height: calc(100vh - 140px);
+        }
+
+        .main-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+        }
+
+        footer {
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            padding: 16px 0;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="topbar">
+        <div class="container-fluid px-4">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <a class="brand" asp-controller="Home" asp-action="Index">📚 LibraryManagement</a>
+
+                    @if (Context.Session.GetInt32("MaTaiKhoan") != null)
+                    {
+                        <nav class="d-flex flex-wrap">
+                            <a class="nav-link menu-link" asp-controller="Home" asp-action="Index">Trang chủ</a>
+
+                            @if (Context.Session.GetString("VaiTro") == "Admin")
+                            {
+                                <a class="nav-link menu-link" asp-controller="Book" asp-action="Index">Quản lý sách</a>
+                                <a class="nav-link menu-link" asp-controller="Reader" asp-action="Index">Độc giả</a>
+                                <a class="nav-link menu-link" asp-controller="Staff" asp-action="Index">Nhân viên</a>
+                                <a class="nav-link menu-link" asp-controller="Report" asp-action="Index">Báo cáo</a>
+                            }
+
+                            @if (Context.Session.GetString("VaiTro") == "ThuThu")
+                            {
+                                <a class="nav-link menu-link" asp-controller="Book" asp-action="Index">Quản lý sách</a>
+                                <a class="nav-link menu-link" asp-controller="Borrow" asp-action="Index">Mượn trả</a>
+                                <a class="nav-link menu-link" asp-controller="Reader" asp-action="Index">Độc giả</a>
+                            }
+
+                            @if (Context.Session.GetString("VaiTro") == "DocGia")
+                            {
+                                <a class="nav-link menu-link" asp-controller="Book" asp-action="Index">Tra cứu sách</a>
+                                <a class="nav-link menu-link" asp-controller="Borrow" asp-action="History">Lịch sử mượn</a>
+                                <a class="nav-link menu-link" asp-controller="Notification" asp-action="Index">Thông báo</a>
+
+                            }
+                        </nav>
+                    }
+                </div>
+
+                <div class="d-flex align-items-center mt-2 mt-lg-0">
+                    @if (Context.Session.GetInt32("MaTaiKhoan") != null)
+                    {
+                        <div class="user-box">
+                            <span class="user-badge">👤 @Context.Session.GetString("HoTen")</span>
+                            <span class="user-badge">🔐 @Context.Session.GetString("VaiTro")</span>
+                            <a class="logout-btn" asp-controller="Account" asp-action="Logout">Đăng xuất</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-wrapper">
+        <div class="container">
+            <div class="main-card">
+                @RenderBody()
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container text-center">
+            © 2026 - LibraryManagement | Hệ thống quản lý thư viện
+        </div>
+    </footer>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

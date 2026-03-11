@@ -1,0 +1,63 @@
+﻿@model List<LibraryManagement.Models.Entities.Sach>
+
+@{
+    ViewData["Title"] = "Quản lý sách";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="fw-bold text-primary">📚 Quản lý sách</h2>
+    <a asp-action="Create" class="btn btn-primary">+ Thêm sách</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning">Chưa có sách nào trong hệ thống.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Mã sách</th>
+                    <th>Tên sách</th>
+                    <th>Tác giả</th>
+                    <th>Thể loại</th>
+                    <th>NXB</th>
+                    <th>Năm XB</th>
+                    <th>Vị trí</th>
+                    <th style="width: 220px;">Chức năng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sach in Model)
+                {
+                    <tr>
+                        <td>@sach.MaSach</td>
+                        <td>@sach.TenSach</td>
+                        <td>@sach.TacGia</td>
+                        <td>@sach.TheLoai</td>
+                        <td>@sach.NhaXuatBan</td>
+                        <td>@sach.NamXuatBan</td>
+                        <td>@sach.ViTri</td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@sach.MaSach" class="btn btn-info btn-sm text-white">Chi tiết</a>
+                            <a asp-action="Edit" asp-route-id="@sach.MaSach" class="btn btn-warning btn-sm">Sửa</a>
+                            <a asp-action="Delete" asp-route-id="@sach.MaSach" class="btn btn-danger btn-sm">Xoá</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

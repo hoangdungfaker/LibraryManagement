@@ -1,0 +1,46 @@
+﻿@model LibraryManagement.Models.ViewModels.ReaderFormViewModel
+
+@{
+    ViewData["Title"] = "Thêm độc giả";
+}
+
+<h2 class="fw-bold text-success mb-4">➕ Thêm độc giả</h2>
+
+<form asp-action="Create" method="post">
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="MaSinhVien" class="form-label">Mã sinh viên</label>
+            <input asp-for="MaSinhVien" class="form-control" />
+            <span asp-validation-for="MaSinhVien" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="MaTaiKhoan" class="form-label">Tài khoản</label>
+            <select asp-for="MaTaiKhoan" class="form-select">
+                <option value="">-- Chọn tài khoản --</option>
+                @foreach (var tk in Model.DanhSachTaiKhoan)
+                {
+                    <option value="@tk.MaTaiKhoan">@tk.HoTen - @tk.Email</option>
+                }
+            </select>
+            <span asp-validation-for="MaTaiKhoan" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="NgaySinh" class="form-label">Ngày sinh</label>
+            <input asp-for="NgaySinh" class="form-control" type="date" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="DiaChi" class="form-label">Địa chỉ</label>
+            <input asp-for="DiaChi" class="form-control" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">Lưu</button>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

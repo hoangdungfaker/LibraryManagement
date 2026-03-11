@@ -1,0 +1,18 @@
+﻿@model LibraryManagement.Models.Entities.TheThuVien
+
+<h2 class="fw-bold text-info mb-4">💳 Chi tiết thẻ thư viện</h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <p><strong>Mã thẻ:</strong> @Model.MaThe</p>
+        <p><strong>Độc giả:</strong> @Model.DocGia?.TaiKhoan?.HoTen</p>
+        <p><strong>Email:</strong> @Model.DocGia?.TaiKhoan?.Email</p>
+        <p><strong>Ngày cấp:</strong> @Model.NgayCap.ToString("dd/MM/yyyy")</p>
+        <p><strong>Ngày hết hạn:</strong> @Model.NgayHetHan.ToString("dd/MM/yyyy")</p>
+        <p><strong>Trạng thái:</strong> @Model.TrangThai</p>
+
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+
+    </div>
+</div>

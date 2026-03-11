@@ -1,0 +1,49 @@
+﻿@model LibraryManagement.Models.ViewModels.RenewBorrowViewModel
+
+@{
+    ViewData["Title"] = "Gia hạn phiếu mượn";
+    var phieu = ViewBag.Phieu as LibraryManagement.Models.Entities.PhieuMuon;
+}
+
+<h2 class="fw-bold text-warning mb-4">🔄 Gia hạn phiếu mượn</h2>
+
+@if (phieu != null)
+{
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <p><strong>Mã phiếu:</strong> @phieu.MaPhieu</p>
+            <p><strong>Độc giả:</strong> @phieu.TheThuVien?.DocGia?.TaiKhoan?.HoTen</p>
+            <p><strong>Nhân viên:</strong> @phieu.NhanVien?.TaiKhoan?.HoTen</p>
+            <p><strong>Ngày mượn:</strong> @phieu.NgayMuon.ToString("dd/MM/yyyy HH:mm")</p>
+            <p><strong>Hạn trả hiện tại:</strong> @phieu.HanTra.ToString("dd/MM/yyyy")</p>
+            <p><strong>Số lần gia hạn hiện tại:</strong> @phieu.SoLanGiaHan</p>
+            <p><strong>Trạng thái:</strong> @phieu.TrangThai</p>
+        </div>
+    </div>
+}
+
+<form asp-action="Renew" method="post">
+    <input type="hidden" asp-for="MaPhieu" />
+    <input type="hidden" asp-for="HanTraCu" />
+    <input type="hidden" asp-for="SoLanGiaHan" />
+
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="mb-3">
+        <label class="form-label">Hạn trả cũ</label>
+        <input class="form-control" value="@Model.HanTraCu.ToString("yyyy-MM-dd")" type="date" readonly />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="HanTraMoi" class="form-label">Hạn trả mới</label>
+        <input asp-for="HanTraMoi" class="form-control" type="date" />
+        <span asp-validation-for="HanTraMoi" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-warning">Xác nhận gia hạn</button>
+    <a asp-action="RenewList" class="btn btn-secondary">Quay lại</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,68 @@
+﻿@model LibraryManagement.Models.ViewModels.BorrowCreateViewModel
+
+@{
+    ViewData["Title"] = "Lập phiếu mượn";
+}
+
+<h2 class="fw-bold text-success mb-4">📝 Lập phiếu mượn</h2>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="MaThe" class="form-label">Thẻ thư viện</label>
+            <select asp-for="MaThe" class="form-select">
+                <option value="">-- Chọn thẻ thư viện --</option>
+                @foreach (var the in Model.DanhSachThe)
+                {
+                    <option value="@the.MaThe">
+                        Thẻ #@the.MaThe - @the.DocGia?.TaiKhoan?.HoTen
+                    </option>
+                }
+            </select>
+            <span asp-validation-for="MaThe" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="MaNhanVien" class="form-label">Nhân viên lập phiếu</label>
+            <select asp-for="MaNhanVien" class="form-select">
+                <option value="">-- Chọn nhân viên --</option>
+                @foreach (var nv in Model.DanhSachNhanVien)
+                {
+                    <option value="@nv.MaNhanVien">
+                        @nv.TaiKhoan?.HoTen - @nv.ChucVu
+                    </option>
+                }
+            </select>
+            <span asp-validation-for="MaNhanVien" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="MaCuon" class="form-label">Cuốn sách</label>
+            <select asp-for="MaCuon" class="form-select">
+                <option value="">-- Chọn cuốn sách --</option>
+                @foreach (var cuon in Model.DanhSachCuonSach)
+                {
+                    <option value="@cuon.MaCuon">
+                        Cuốn #@cuon.MaCuon - @cuon.Sach?.TenSach
+                    </option>
+                }
+            </select>
+            <span asp-validation-for="MaCuon" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <label asp-for="HanTra" class="form-label">Hạn trả</label>
+            <input asp-for="HanTra" class="form-control" type="date" />
+            <span asp-validation-for="HanTra" class="text-danger"></span>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">Lập phiếu</button>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

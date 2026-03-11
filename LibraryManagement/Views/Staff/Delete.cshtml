@@ -1,0 +1,22 @@
+﻿@model LibraryManagement.Models.Entities.NhanVien
+
+@{
+    ViewData["Title"] = "Xoá nhân viên";
+}
+
+<h2 class="fw-bold text-danger mb-4">🗑️ Xác nhận xoá nhân viên</h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <p><strong>Mã nhân viên:</strong> @Model.MaNhanVien</p>
+        <p><strong>Họ tên:</strong> @Model.TaiKhoan?.HoTen</p>
+        <p><strong>Email:</strong> @Model.TaiKhoan?.Email</p>
+        <p><strong>Chức vụ:</strong> @Model.ChucVu</p>
+
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="MaNhanVien" />
+            <button type="submit" class="btn btn-danger">Xác nhận xoá</button>
+            <a asp-action="Index" class="btn btn-secondary">Huỷ</a>
+        </form>
+    </div>
+</div>

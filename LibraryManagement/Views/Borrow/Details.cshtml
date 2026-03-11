@@ -1,0 +1,69 @@
+﻿@model LibraryManagement.Models.Entities.PhieuMuon
+
+@{
+    ViewData["Title"] = "Chi tiết phiếu mượn";
+}
+
+<h2 class="fw-bold text-info mb-4">📄 Chi tiết phiếu mượn</h2>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <p><strong>Mã phiếu:</strong> @Model.MaPhieu</p>
+        <p><strong>Độc giả:</strong> @Model.TheThuVien?.DocGia?.TaiKhoan?.HoTen</p>
+        <p><strong>Nhân viên:</strong> @Model.NhanVien?.TaiKhoan?.HoTen</p>
+        <p><strong>Ngày mượn:</strong> @Model.NgayMuon.ToString("dd/MM/yyyy HH:mm")</p>
+        <p><strong>Hạn trả:</strong> @Model.HanTra.ToString("dd/MM/yyyy")</p>
+        <p><strong>Trạng thái:</strong> @Model.TrangThai</p>
+        <p><strong>Số lần gia hạn:</strong> @Model.SoLanGiaHan</p>
+    </div>
+</div>
+
+<h4>Danh sách sách mượn</h4>
+
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Mã cuốn</th>
+            <th>Tên sách</th>
+            <th>Ngày trả</th>
+            <th>Tình trạng</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ct in Model.ChiTietPhieuMuons)
+        {
+            <tr>
+                <td>@ct.MaCuon</td>
+                <td>@ct.CuonSach?.Sach?.TenSach</td>
+                <td>@(ct.NgayTra.HasValue? ct.NgayTra.Value.ToString("dd/MM/yyyy HH:mm") : "Chưa trả")</td>
+                <td>@(string.IsNullOrEmpty(ct.TinhTrang) ? "Chưa cập nhật" : ct.TinhTrang)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@if (Model.TienPhats != null && Model.TienPhats.Any())
+{
+    <h4 class="mt-4">💰 Tiền phạt</h4>
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Mã phạt</th>
+                <th>Số tiền</th>
+                <th>Lý do</th>
+                <th>Đã thanh toán</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var phat in Model.TienPhats)
+            {
+                <tr>
+                    <td>@phat.MaPhat</td>
+                    <td>@phat.SoTien.ToString("N0") VNĐ</td>
+                    <td>@phat.LyDo</td>
+                    <td>@(phat.DaThanhToan ? "Đã thanh toán" : "Chưa thanh toán")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<a asp-action="Index" class="btn btn-secondary">Quay lại</a>

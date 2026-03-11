@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+<div class="container mt-4">
+    <h2>Chào mừng đến hệ thống quản lý thư viện 📚</h2>
+    <p><strong>Họ tên:</strong> @ViewBag.HoTen</p>
+    <p><strong>Vai trò:</strong> @ViewBag.VaiTro</p>
+
+    <hr />
+
+    @if (ViewBag.VaiTro == "Admin")
+    {
+        <div>
+            <h4>Khu vực Admin</h4>
+            <p>Quản lý người dùng, phân quyền, báo cáo thống kê.</p>
+        </div>
+    }
+    else if (ViewBag.VaiTro == "ThuThu")
+    {
+        <div>
+            <h4>Khu vực Thủ thư</h4>
+            <p>Quản lý sách, độc giả, mượn trả, tiền phạt.</p>
+        </div>
+    }
+    else if (ViewBag.VaiTro == "DocGia")
+    {
+        <div>
+            <h4>Khu vực Độc giả</h4>
+            <p>Tra cứu sách, xem lịch sử mượn, nhận thông báo.</p>
+        </div>
+    }
+</div>

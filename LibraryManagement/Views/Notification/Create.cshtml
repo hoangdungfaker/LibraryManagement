@@ -1,0 +1,36 @@
+﻿@model LibraryManagement.Models.ViewModels.NotificationCreateViewModel
+
+@{
+    ViewData["Title"] = "Gửi thông báo";
+}
+
+<h2 class="fw-bold text-primary mb-4">📨 Gửi thông báo</h2>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <div class="mb-3">
+        <label asp-for="MaTaiKhoan" class="form-label">Người nhận</label>
+        <select asp-for="MaTaiKhoan" class="form-select">
+            <option value="">-- Chọn tài khoản --</option>
+            @foreach (var tk in Model.DanhSachTaiKhoan)
+            {
+                <option value="@tk.MaTaiKhoan">@tk.HoTen - @tk.Email</option>
+            }
+        </select>
+        <span asp-validation-for="MaTaiKhoan" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NoiDung" class="form-label">Nội dung thông báo</label>
+        <textarea asp-for="NoiDung" class="form-control" rows="5"></textarea>
+        <span asp-validation-for="NoiDung" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Gửi thông báo</button>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

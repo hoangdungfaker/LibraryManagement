@@ -1,0 +1,36 @@
+﻿@model LibraryManagement.Models.Entities.ThongBao
+
+@{
+    ViewData["Title"] = "Chi tiết thông báo";
+}
+
+<h2 class="fw-bold text-info mb-4">🔔 Chi tiết thông báo</h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <p><strong>Mã thông báo:</strong> @Model.MaThongBao</p>
+        <p><strong>Người nhận:</strong> @Model.TaiKhoan?.HoTen</p>
+        <p><strong>Email:</strong> @Model.TaiKhoan?.Email</p>
+        <p><strong>Ngày gửi:</strong> @Model.NgayGui.ToString("dd/MM/yyyy HH:mm")</p>
+        <p>
+            <strong>Trạng thái:</strong>
+            @if (Model.DaDoc)
+            {
+                <span class="badge bg-success">Đã đọc</span>
+            }
+            else
+            {
+                <span class="badge bg-danger">Chưa đọc</span>
+            }
+        </p>
+
+        <hr />
+
+        <p><strong>Nội dung:</strong></p>
+        <div class="border rounded p-3 bg-light">
+            @Model.NoiDung
+        </div>
+
+        <a asp-action="Index" class="btn btn-secondary mt-3">Quay lại</a>
+    </div>
+</div>

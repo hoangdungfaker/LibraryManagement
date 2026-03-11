@@ -1,0 +1,34 @@
+﻿@model LibraryManagement.Models.ViewModels.LibraryCardFormViewModel
+
+<h2 class="fw-bold text-primary mb-4">💳 Cấp thẻ thư viện</h2>
+
+<form asp-action="Create" method="post">
+
+    <div class="mb-3">
+        <label class="form-label">Độc giả</label>
+        <select asp-for="MaDocGia" class="form-select">
+            <option value="">-- Chọn độc giả --</option>
+
+            @foreach (var dg in Model.DanhSachDocGia)
+            {
+                <option value="@dg.MaDocGia">
+                    @dg.TaiKhoan?.HoTen - @dg.MaSinhVien
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Ngày cấp</label>
+        <input asp-for="NgayCap" class="form-control" type="date" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Ngày hết hạn</label>
+        <input asp-for="NgayHetHan" class="form-control" type="date" />
+    </div>
+
+    <button class="btn btn-primary">Tạo thẻ</button>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+
+</form>

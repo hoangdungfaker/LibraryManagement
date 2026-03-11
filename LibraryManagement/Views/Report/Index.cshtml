@@ -1,0 +1,162 @@
+﻿@model LibraryManagement.Models.ViewModels.ReportViewModel
+
+@{
+    ViewData["Title"] = "Báo cáo thống kê";
+}
+
+<h2 class="fw-bold text-dark mb-4">📊 Báo cáo thống kê hệ thống</h2>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-primary text-white rounded-4">
+            <div class="card-body">
+                <h5>Tổng đầu sách</h5>
+                <h2>@Model.TongSoSach</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-success text-white rounded-4">
+            <div class="card-body">
+                <h5>Tổng cuốn sách</h5>
+                <h2>@Model.TongSoCuonSach</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-warning text-dark rounded-4">
+            <div class="card-body">
+                <h5>Tổng độc giả</h5>
+                <h2>@Model.TongSoDocGia</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 bg-info text-white rounded-4">
+            <div class="card-body">
+                <h5>Tổng nhân viên</h5>
+                <h2>@Model.TongSoNhanVien</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body">
+                <h5>📚 Phiếu đang mượn</h5>
+                <h3 class="text-primary">@Model.TongPhieuDangMuon</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body">
+                <h5>✅ Phiếu đã trả</h5>
+                <h3 class="text-success">@Model.TongPhieuDaTra</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body">
+                <h5>⏰ Phiếu quá hạn</h5>
+                <h3 class="text-danger">@Model.TongPhieuQuaHan</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 rounded-4 mb-4">
+    <div class="card-body">
+        <h4 class="fw-bold text-danger">💰 Tổng tiền phạt chưa thanh toán</h4>
+        <h2>@Model.TongTienPhatChuaThanhToan.ToString("N0") VNĐ</h2>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-7">
+        <div class="card shadow-sm border-0 rounded-4 h-100">
+            <div class="card-body">
+                <h4 class="fw-bold mb-3">📈 Biểu đồ cột tổng quan</h4>
+                <canvas id="barChart" height="120"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card shadow-sm border-0 rounded-4 h-100">
+            <div class="card-body">
+                <h4 class="fw-bold mb-3">🥧 Biểu đồ trạng thái phiếu mượn</h4>
+                <canvas id="pieChart" height="220"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body">
+        <h4 class="fw-bold mb-3">🔥 Top 10 sách được mượn nhiều</h4>
+
+        @if (!Model.TopSachMuonNhieu.Any())
+        {
+            <div class="alert alert-warning mb-0">Chưa có dữ liệu mượn sách.</div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Mã sách</th>
+                            <th>Tên sách</th>
+                            <th>Tác giả</th>
+                            <th>Số lượt mượn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int stt = 1;
+                        }
+                        @foreach (var item in Model.TopSachMuonNhieu)
+                        {
+                            <tr>
+                                <td>@stt</td>
+                                <td>@item.MaSach</td>
+                                <td>@item.TenSach</td>
+                                <td>@item.TacGia</td>
+                                <td>@item.SoLuotMuon</td>
+                            </tr>
+                            stt++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const reportData = {
+            tongSoSach: @Model.TongSoSach,
+            tongSoCuonSach: @Model.TongSoCuonSach,
+            tongSoDocGia: @Model.TongSoDocGia,
+            tongSoNhanVien: @Model.TongSoNhanVien,
+            tongPhieuDangMuon: @Model.TongPhieuDangMuon,
+            tongPhieuDaTra: @Model.TongPhieuDaTra,
+            tongPhieuQuaHan: @Model.TongPhieuQuaHan
+        };
+    </script>
+
+    <script src="~/js/report.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,45 @@
+﻿@model List<LibraryManagement.Models.Entities.TheThuVien>
+
+<h2 class="fw-bold text-primary mb-3">💳 Quản lý thẻ thư viện</h2>
+
+<a asp-action="Create" class="btn btn-primary mb-3">+ Cấp thẻ mới</a>
+
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Mã thẻ</th>
+            <th>Độc giả</th>
+            <th>Email</th>
+            <th>Ngày cấp</th>
+            <th>Ngày hết hạn</th>
+            <th>Trạng thái</th>
+            <th>Chức năng</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var card in Model)
+        {
+            <tr>
+                <td>@card.MaThe</td>
+                <td>@card.DocGia?.TaiKhoan?.HoTen</td>
+                <td>@card.DocGia?.TaiKhoan?.Email</td>
+                <td>@card.NgayCap.ToString("dd/MM/yyyy")</td>
+                <td>@card.NgayHetHan.ToString("dd/MM/yyyy")</td>
+                <td>@card.TrangThai</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@card.MaThe" class="btn btn-info btn-sm">Chi tiết</a>
+                    <a asp-action="Extend" asp-route-id="@card.MaThe" class="btn btn-success btn-sm">Gia hạn</a>
+
+                    @if (card.TrangThai == "HoatDong")
+                    {
+                        <a asp-action="Lock" asp-route-id="@card.MaThe" class="btn btn-danger btn-sm">Khoá</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Unlock" asp-route-id="@card.MaThe" class="btn btn-warning btn-sm">Mở</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

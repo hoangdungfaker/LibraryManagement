@@ -1,0 +1,77 @@
+﻿@model List<LibraryManagement.Models.Entities.PhieuMuon>
+
+@{
+    ViewData["Title"] = "Trả sách";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="fw-bold text-danger">📦 Danh sách phiếu đang mượn</h2>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách mượn</a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning">Không có phiếu nào đang mượn.</div>
+}
+else
+{
+    @foreach (var phieu in Model)
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-dark text-white">
+                Phiếu #@phieu.MaPhieu - @phieu.TheThuVien?.DocGia?.TaiKhoan?.HoTen
+            </div>
+            <div class="card-body">
+                <p><strong>Nhân viên:</strong> @phieu.NhanVien?.TaiKhoan?.HoTen</p>
+                <p><strong>Ngày mượn:</strong> @phieu.NgayMuon.ToString("dd/MM/yyyy HH:mm")</p>
+                <p><strong>Hạn trả:</strong> @phieu.HanTra.ToString("dd/MM/yyyy")</p>
+                <p><strong>Trạng thái:</strong> @phieu.TrangThai</p>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Mã cuốn</th>
+                                <th>Tên sách</th>
+                                <th>Ngày trả</th>
+                                <th>Tình trạng</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var ct in phieu.ChiTietPhieuMuons)
+                            {
+                                <tr>
+                                    <td>@ct.MaCuon</td>
+                                    <td>@ct.CuonSach?.Sach?.TenSach</td>
+                                    <td>@(ct.NgayTra.HasValue? ct.NgayTra.Value.ToString("dd/MM/yyyy HH:mm") : "Chưa trả")</td>
+                                    <td>@(string.IsNullOrEmpty(ct.TinhTrang) ? "Chưa cập nhật" : ct.TinhTrang)</td>
+                                    <td>
+                                        @if (ct.NgayTra == null)
+                                        {
+                                            <a asp-action="Return"
+                                               asp-route-maPhieu="@phieu.MaPhieu"
+                                               asp-route-maCuon="@ct.MaCuon"
+                                               class="btn btn-danger btn-sm">
+                                                Trả sách
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">Đã trả</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+}
