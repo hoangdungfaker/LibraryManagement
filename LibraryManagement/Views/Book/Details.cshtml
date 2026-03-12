@@ -18,23 +18,23 @@
                 <h2 class="detail-title">@Model.TenSach</h2>
 
                 <div class="detail-meta">
+                    <p><strong>Mã sách:</strong> @Model.MaSach</p>
                     <p><strong>Tác giả:</strong> @Model.TacGia</p>
                     <p><strong>Thể loại:</strong> @(string.IsNullOrWhiteSpace(Model.TheLoai) ? "Chưa cập nhật" : Model.TheLoai)</p>
                     <p><strong>Nhà xuất bản:</strong> @(string.IsNullOrWhiteSpace(Model.NhaXuatBan) ? "Chưa cập nhật" : Model.NhaXuatBan)</p>
                     <p><strong>Năm xuất bản:</strong> @(Model.NamXuatBan.HasValue? Model.NamXuatBan.ToString() : "Chưa cập nhật")</p>
                     <p><strong>Vị trí:</strong> @(string.IsNullOrWhiteSpace(Model.ViTri) ? "Chưa cập nhật" : Model.ViTri)</p>
-                    <p><strong>Mã sách:</strong> @Model.MaSach</p>
                 </div>
 
                 <div class="detail-description mt-4">
                     <h5>Giới thiệu sách</h5>
                     <p>
-                        Đây là đầu sách thuộc hệ thống thư viện, phục vụ cho nhu cầu học tập, nghiên cứu và tra cứu tài liệu.
-                        Người dùng có thể tìm kiếm, xem thông tin chi tiết, theo dõi lịch sử mượn và sử dụng sách theo quyền hạn được cấp.
+                        Đây là đầu sách hiện có trong thư viện, phục vụ cho nhu cầu học tập, nghiên cứu và tra cứu thông tin.
+                        Người dùng có thể xem thông tin chi tiết của sách, theo dõi thể loại, tác giả, nhà xuất bản và vị trí lưu trữ.
                     </p>
                     <p>
-                        Nội dung hiển thị ở đây có thể mở rộng thêm phần mô tả dài, tóm tắt sách, từ khóa, số lượng bản sao,
-                        trạng thái còn sách hoặc các thông tin nghiệp vụ khác của thư viện.
+                        Hệ thống có thể được mở rộng thêm ảnh bìa, mô tả chuyên sâu, số lượng bản sao, tình trạng còn sách
+                        và thông tin liên quan đến lượt mượn của từng đầu sách.
                     </p>
                 </div>
 

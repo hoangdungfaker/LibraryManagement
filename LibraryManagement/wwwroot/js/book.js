@@ -2,6 +2,7 @@
     const searchInput = document.getElementById("bookSearchInput");
     const categoryInputs = document.querySelectorAll("input[name='bookCategory']");
     const bookCards = document.querySelectorAll(".book-filter-item");
+    const resetBtn = document.getElementById("resetBookFilter");
 
     if (!searchInput || bookCards.length === 0) return;
 
@@ -25,11 +26,7 @@
             const matchTitle = title.includes(keyword);
             const matchCategory = category === "" || bookCategory === category;
 
-            if (matchTitle && matchCategory) {
-                card.style.display = "";
-            } else {
-                card.style.display = "none";
-            }
+            card.style.display = (matchTitle && matchCategory) ? "" : "none";
         });
     }
 
@@ -38,4 +35,15 @@
     categoryInputs.forEach(input => {
         input.addEventListener("change", filterBooks);
     });
+
+    if (resetBtn) {
+        resetBtn.addEventListener("click", function () {
+            searchInput.value = "";
+
+            const firstRadio = document.querySelector("input[name='bookCategory'][value='']");
+            if (firstRadio) firstRadio.checked = true;
+
+            filterBooks();
+        });
+    }
 });

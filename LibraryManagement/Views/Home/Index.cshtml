@@ -5,50 +5,83 @@
 }
 
 <div class="library-home">
-
     <div class="hero-section mb-4">
         <div class="hero-overlay">
             <div class="hero-content">
-                <h1>📚 Hệ thống quản lý thư viện</h1>
-                <p>Chào mừng <strong>@hoTen</strong> đến với không gian đọc sách hiện đại.</p>
+                <h1>📚 Không gian thư viện số hiện đại</h1>
+                <p>Xin chào <strong>@hoTen</strong> — khám phá kho sách, tra cứu nhanh và sử dụng hệ thống thư viện thông minh.</p>
 
-                <form class="search-bar mt-3" method="get" asp-controller="Book" asp-action="Index">
-                    <input type="text" name="keyword" placeholder="Tìm kiếm sách theo tên, tác giả, thể loại..." />
-                    <button type="submit">Tìm kiếm</button>
+                <form class="search-bar mt-4" method="get" asp-controller="Book" asp-action="Index">
+                    <input type="text" name="keyword" placeholder="Tìm kiếm theo tên sách..." />
+                    <button type="submit">Tìm sách</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <div class="row g-4">
-        <div class="col-lg-3">
-            <div class="category-box">
-                <h4>📂 Danh mục sách</h4>
-                <ul class="category-list">
-                    <li>Công nghệ thông tin</li>
-                    <li>Khoa học dữ liệu</li>
-                    <li>Lập trình Web</li>
-                    <li>Cơ sở dữ liệu</li>
-                    <li>Kỹ năng mềm</li>
-                    <li>Tiểu thuyết</li>
-                    <li>Lịch sử</li>
-                    <li>Văn học</li>
-                </ul>
+    <div class="row g-4 align-items-stretch">
+        <div class="col-lg-4">
+            <div class="home-info-card h-100">
+                <h3>🌟 Chào mừng đến thư viện</h3>
+                <p>
+                    Hệ thống hỗ trợ tra cứu sách, theo dõi lịch sử mượn, quản lý độc giả, mượn trả,
+                    gia hạn và thống kê thư viện.
+                </p>
+
+                <div class="quick-tags">
+                    <span class="quick-tag">Sách công nghệ</span>
+                    <span class="quick-tag">Lập trình</span>
+                    <span class="quick-tag">Cơ sở dữ liệu</span>
+                    <span class="quick-tag">Kỹ năng</span>
+                </div>
+
+                <div class="mt-4">
+                    <a asp-controller="Book" asp-action="Index" class="btn btn-primary">Khám phá sách</a>
+                </div>
             </div>
         </div>
 
-        <div class="col-lg-9">
-            <div class="book-banner">
-                <div class="book-banner-content">
-                    <h2>Không gian sách dành cho bạn</h2>
-                    <p>Khám phá tri thức mỗi ngày với thư viện trực tuyến thông minh.</p>
+        <div class="col-lg-8">
+            <div class="home-highlight-card h-100">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="highlight-mini-card">
+                            <div class="mini-icon">📘</div>
+                            <h5>Kho sách đa dạng</h5>
+                            <p>Quản lý đầu sách theo thể loại, tác giả, vị trí và tình trạng.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="highlight-mini-card">
+                            <div class="mini-icon">🕘</div>
+                            <h5>Lịch sử mượn rõ ràng</h5>
+                            <p>Theo dõi mượn trả, gia hạn và trạng thái phiếu một cách trực quan.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="highlight-mini-card">
+                            <div class="mini-icon">🔔</div>
+                            <h5>Thông báo thông minh</h5>
+                            <p>Nhắc hạn trả, thông báo vi phạm và cập nhật thông tin nhanh chóng.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="highlight-mini-card">
+                            <div class="mini-icon">📊</div>
+                            <h5>Báo cáo trực quan</h5>
+                            <p>Biểu đồ, thống kê đầu sách, độc giả, tiền phạt và lượt mượn.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="section-title mt-5 mb-3">
-        <h3>🔥 Chức năng nhanh</h3>
+        <h3>🚀 Truy cập nhanh</h3>
     </div>
 
     <div class="row g-3 mb-5">
@@ -57,7 +90,7 @@
             <div class="col-md-3">
                 <div class="feature-card">
                     <h5>📘 Quản lý sách</h5>
-                    <p>Thêm, sửa, xoá và tra cứu đầu sách.</p>
+                    <p>Thêm, sửa, xoá và tra cứu đầu sách trong hệ thống.</p>
                     <a asp-controller="Book" asp-action="Index" class="btn btn-primary">Truy cập</a>
                 </div>
             </div>
@@ -65,7 +98,7 @@
             <div class="col-md-3">
                 <div class="feature-card">
                     <h5>👨‍🎓 Độc giả</h5>
-                    <p>Quản lý hồ sơ độc giả và tài khoản.</p>
+                    <p>Quản lý hồ sơ độc giả và trạng thái thẻ thư viện.</p>
                     <a asp-controller="Reader" asp-action="Index" class="btn btn-success">Truy cập</a>
                 </div>
             </div>
@@ -73,7 +106,7 @@
             <div class="col-md-3">
                 <div class="feature-card">
                     <h5>🔄 Mượn trả</h5>
-                    <p>Xử lý mượn, trả, gia hạn và phạt.</p>
+                    <p>Xử lý toàn bộ nghiệp vụ mượn, trả, gia hạn và phạt.</p>
                     <a asp-controller="Borrow" asp-action="Index" class="btn btn-warning">Truy cập</a>
                 </div>
             </div>
@@ -81,7 +114,7 @@
             <div class="col-md-3">
                 <div class="feature-card">
                     <h5>📊 Báo cáo</h5>
-                    <p>Xem tổng quan số liệu thư viện.</p>
+                    <p>Xem thống kê tổng quan và biểu đồ hoạt động thư viện.</p>
                     <a asp-controller="Report" asp-action="Index" class="btn btn-dark">Truy cập</a>
                 </div>
             </div>
@@ -92,7 +125,7 @@
             <div class="col-md-4">
                 <div class="feature-card">
                     <h5>📘 Quản lý sách</h5>
-                    <p>Thêm, sửa và tra cứu đầu sách.</p>
+                    <p>Thêm, sửa, tra cứu và xem chi tiết đầu sách.</p>
                     <a asp-controller="Book" asp-action="Index" class="btn btn-primary">Truy cập</a>
                 </div>
             </div>
@@ -100,7 +133,7 @@
             <div class="col-md-4">
                 <div class="feature-card">
                     <h5>👨‍🎓 Độc giả</h5>
-                    <p>Quản lý độc giả và thẻ thư viện.</p>
+                    <p>Quản lý độc giả, thẻ thư viện và thông tin liên quan.</p>
                     <a asp-controller="Reader" asp-action="Index" class="btn btn-success">Truy cập</a>
                 </div>
             </div>
@@ -108,7 +141,7 @@
             <div class="col-md-4">
                 <div class="feature-card">
                     <h5>🔄 Mượn trả</h5>
-                    <p>Xử lý mượn, trả và gia hạn sách.</p>
+                    <p>Xử lý mượn sách, trả sách và gia hạn phiếu mượn.</p>
                     <a asp-controller="Borrow" asp-action="Index" class="btn btn-warning">Truy cập</a>
                 </div>
             </div>
@@ -119,7 +152,7 @@
             <div class="col-md-4">
                 <div class="feature-card">
                     <h5>📚 Tra cứu sách</h5>
-                    <p>Tìm kiếm đầu sách theo nhu cầu của bạn.</p>
+                    <p>Tìm kiếm theo tên sách, lọc theo thể loại và xem chi tiết.</p>
                     <a asp-controller="Book" asp-action="Index" class="btn btn-primary">Truy cập</a>
                 </div>
             </div>
@@ -127,7 +160,7 @@
             <div class="col-md-4">
                 <div class="feature-card">
                     <h5>🕘 Lịch sử mượn</h5>
-                    <p>Xem các phiếu mượn và trạng thái hiện tại.</p>
+                    <p>Xem các phiếu mượn, hạn trả và trạng thái hiện tại.</p>
                     <a asp-controller="Borrow" asp-action="History" class="btn btn-success">Truy cập</a>
                 </div>
             </div>
@@ -135,52 +168,10 @@
             <div class="col-md-4">
                 <div class="feature-card">
                     <h5>🔔 Thông báo</h5>
-                    <p>Xem thông báo và nhắc nợ từ thư viện.</p>
+                    <p>Xem thông báo cá nhân và các nhắc nhở từ thư viện.</p>
                     <a asp-controller="Notification" asp-action="Index" class="btn btn-dark">Truy cập</a>
                 </div>
             </div>
         }
-    </div>
-
-    <div class="section-title mb-3">
-        <h3>📖 Sách nổi bật</h3>
-    </div>
-
-    <div class="row g-4">
-        <div class="col-md-3">
-            <div class="book-card">
-                <div class="book-cover">📘</div>
-                <h5>Lập trình C# cơ bản</h5>
-                <p>Tác giả: Nguyễn Văn B</p>
-                <a asp-controller="Book" asp-action="Index" class="btn btn-outline-primary btn-sm">Xem thêm</a>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="book-card">
-                <div class="book-cover">📙</div>
-                <h5>Cơ sở dữ liệu</h5>
-                <p>Tác giả: Trần Văn C</p>
-                <a asp-controller="Book" asp-action="Index" class="btn btn-outline-primary btn-sm">Xem thêm</a>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="book-card">
-                <div class="book-cover">📗</div>
-                <h5>ASP.NET MVC</h5>
-                <p>Tác giả: Lê Văn D</p>
-                <a asp-controller="Book" asp-action="Index" class="btn btn-outline-primary btn-sm">Xem thêm</a>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="book-card">
-                <div class="book-cover">📕</div>
-                <h5>Kỹ năng làm việc nhóm</h5>
-                <p>Tác giả: Nhiều tác giả</p>
-                <a asp-controller="Book" asp-action="Index" class="btn btn-outline-primary btn-sm">Xem thêm</a>
-            </div>
-        </div>
     </div>
 </div>

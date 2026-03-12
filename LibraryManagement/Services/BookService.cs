@@ -16,13 +16,44 @@ namespace LibraryManagement.Services
         public async Task<List<Sach>> GetAllAsync()
         {
             return await _context.Sachs
-                .OrderBy(x => x.MaSach)
+                .OrderBy(x => x.TenSach)
+                .ToListAsync();
+        }
+
+        public async Task<List<Sach>> SearchAsync(string? keyword, string? category)
+        {
+            var query = _context.Sachs.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                var lowerKeyword = keyword.Trim().ToLower();
+                query = query.Where(x => x.TenSach != null && x.TenSach.ToLower().Contains(lowerKeyword));
+            }
+
+            if (!string.IsNullOrWhiteSpace(category))
+            {
+                var lowerCategory = category.Trim().ToLower();
+                query = query.Where(x => x.TheLoai != null && x.TheLoai.ToLower() == lowerCategory);
+            }
+
+            return await query
+                .OrderBy(x => x.TenSach)
                 .ToListAsync();
         }
 
         public async Task<Sach?> GetByIdAsync(int id)
         {
             return await _context.Sachs.FirstOrDefaultAsync(x => x.MaSach == id);
+        }
+
+        public async Task<List<string>> GetCategoriesAsync()
+        {
+            return await _context.Sachs
+                .Where(x => x.TheLoai != null && x.TheLoai != "")
+                .Select(x => x.TheLoai!)
+                .Distinct()
+                .OrderBy(x => x)
+                .ToListAsync();
         }
 
         public async Task AddAsync(Sach sach)

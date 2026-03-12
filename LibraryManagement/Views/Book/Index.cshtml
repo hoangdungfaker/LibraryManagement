@@ -1,63 +1,100 @@
 ﻿@model List<LibraryManagement.Models.Entities.Sach>
 
 @{
-    ViewData["Title"] = "Quản lý sách";
+    ViewData["Title"] = "Danh sách sách";
+    var keyword = ViewBag.Keyword as string ?? "";
+    var category = ViewBag.Category as string ?? "";
+    var categories = ViewBag.Categories as List<string> ?? new List<string>();
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="fw-bold text-primary">📚 Quản lý sách</h2>
-    <a asp-action="Create" class="btn btn-primary">+ Thêm sách</a>
+<div class="book-page">
+    <div class="row g-4">
+        <div class="col-lg-3">
+            <div class="filter-panel">
+                <h4>📂 Bộ lọc sách</h4>
+
+                <div class="mb-3">
+                    <input id="bookSearchInput"
+                           type="text"
+                           class="form-control"
+                           placeholder="Tìm theo tên sách..."
+                           value="@keyword" />
+                </div>
+
+                <div class="category-radio-list">
+                    <label>
+                        <input type="radio" name="bookCategory" value="" @(string.IsNullOrEmpty(category) ? "checked" : null) />
+                        Tất cả
+                    </label>
+
+                    @foreach (var item in categories)
+                    {
+                        <label>
+                            <input type="radio" name="bookCategory" value="@item" @(category == item ? "checked" : null) />
+                            @item
+                        </label>
+                    }
+                </div>
+
+                <div class="mt-3">
+                    <button type="button" id="resetBookFilter" class="btn btn-secondary w-100">Xoá bộ lọc</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9">
+            <div class="book-list-header">
+                <div>
+                    <h2 class="fw-bold text-primary mb-1">📚 Danh sách sách</h2>
+                    <p class="text-muted mb-0">Tìm kiếm theo tên sách và lọc theo thể loại.</p>
+                </div>
+
+                @if (Context.Session.GetString("VaiTro") == "Admin" || Context.Session.GetString("VaiTro") == "ThuThu")
+                {
+                    <a asp-action="Create" class="btn btn-primary">+ Thêm sách</a>
+                }
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div class="alert alert-warning mt-4">Không tìm thấy sách phù hợp.</div>
+            }
+            else
+            {
+                <div class="row g-4 mt-1" id="bookListContainer">
+                    @foreach (var sach in Model)
+                    {
+                        <div class="col-md-6 col-xl-4 book-filter-item"
+                             data-title="@sach.TenSach"
+                             data-category="@sach.TheLoai">
+                            <div class="book-showcase-card">
+                                <div class="book-showcase-cover">📘</div>
+
+                                <div class="book-showcase-content">
+                                    <h5>@sach.TenSach</h5>
+                                    <p><strong>Tác giả:</strong> @sach.TacGia</p>
+                                    <p><strong>Thể loại:</strong> @(string.IsNullOrWhiteSpace(sach.TheLoai) ? "Chưa cập nhật" : sach.TheLoai)</p>
+                                    <p><strong>NXB:</strong> @(string.IsNullOrWhiteSpace(sach.NhaXuatBan) ? "Chưa cập nhật" : sach.NhaXuatBan)</p>
+
+                                    <div class="book-actions mt-3">
+                                        <a asp-action="Details" asp-route-id="@sach.MaSach" class="btn btn-info text-white btn-sm">Chi tiết</a>
+
+                                        @if (Context.Session.GetString("VaiTro") == "Admin" || Context.Session.GetString("VaiTro") == "ThuThu")
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@sach.MaSach" class="btn btn-warning btn-sm">Sửa</a>
+                                            <a asp-action="Delete" asp-route-id="@sach.MaSach" class="btn btn-danger btn-sm">Xoá</a>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
 </div>
 
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success">@TempData["Success"]</div>
-}
-
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">@TempData["Error"]</div>
-}
-
-@if (!Model.Any())
-{
-    <div class="alert alert-warning">Chưa có sách nào trong hệ thống.</div>
-}
-else
-{
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover align-middle">
-            <thead class="table-dark">
-                <tr>
-                    <th>Mã sách</th>
-                    <th>Tên sách</th>
-                    <th>Tác giả</th>
-                    <th>Thể loại</th>
-                    <th>NXB</th>
-                    <th>Năm XB</th>
-                    <th>Vị trí</th>
-                    <th style="width: 220px;">Chức năng</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var sach in Model)
-                {
-                    <tr>
-                        <td>@sach.MaSach</td>
-                        <td>@sach.TenSach</td>
-                        <td>@sach.TacGia</td>
-                        <td>@sach.TheLoai</td>
-                        <td>@sach.NhaXuatBan</td>
-                        <td>@sach.NamXuatBan</td>
-                        <td>@sach.ViTri</td>
-                        <td>
-                            <a asp-action="Details" asp-route-id="@sach.MaSach" class="btn btn-info btn-sm text-white">Chi tiết</a>
-                            <a asp-action="Edit" asp-route-id="@sach.MaSach" class="btn btn-warning btn-sm">Sửa</a>
-                            <a asp-action="Delete" asp-route-id="@sach.MaSach" class="btn btn-danger btn-sm">Xoá</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+@section Scripts {
+    <script src="~/js/book.js" asp-append-version="true"></script>
 }

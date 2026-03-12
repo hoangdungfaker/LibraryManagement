@@ -21,12 +21,18 @@ namespace LibraryManagement.Controllers
             return maTaiKhoan != null && (vaiTro == "Admin" || vaiTro == "ThuThu");
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? keyword, string? category)
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
+            if (HttpContext.Session.GetInt32("MaTaiKhoan") == null)
+                return RedirectToAction("Login", "Account");
 
-            var dsSach = await _bookService.GetAllAsync();
+            var dsSach = await _bookService.SearchAsync(keyword, category);
+            var categories = await _bookService.GetCategoriesAsync();
+
+            ViewBag.Keyword = keyword;
+            ViewBag.Category = category;
+            ViewBag.Categories = categories;
+
             return View(dsSach);
         }
 

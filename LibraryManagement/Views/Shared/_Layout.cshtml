@@ -7,25 +7,27 @@
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-custom">
-        <div class="container-fluid">
+    @if (Context.Session.GetInt32("MaTaiKhoan") != null)
+    {
+        <nav class="navbar navbar-expand-xl navbar-custom">
+            <div class="container-fluid px-4">
 
-            <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                📚 LibraryManagement
-            </a>
+                <a class="navbar-brand brand-custom" asp-controller="Home" asp-action="Index">
+                    <span class="brand-icon">📚</span>
+                    <span>LibraryManagement</span>
+                </a>
 
-            <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+                <button class="navbar-toggler navbar-toggler-custom" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-            <div class="collapse navbar-collapse" id="mainNavbar">
-                @if (Context.Session.GetInt32("MaTaiKhoan") != null)
-                {
-                    <div class="navbar-nav me-auto">
-
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <div class="navbar-nav me-auto align-items-xl-center">
                         <a class="nav-link menu-link" asp-controller="Home" asp-action="Index">Trang chủ</a>
 
                         @if (Context.Session.GetString("VaiTro") == "Admin")
@@ -56,31 +58,32 @@
                         }
                     </div>
 
-                    <div class="user-box">
-                        <span class="user-chip">👤 @Context.Session.GetString("HoTen")</span>
-                        <span class="role-badge">@Context.Session.GetString("VaiTro")</span>
+                    <div class="header-user-box">
+                        <div class="user-chip">👤 @Context.Session.GetString("HoTen")</div>
+                        <div class="role-chip">@Context.Session.GetString("VaiTro")</div>
                         <a asp-controller="Account" asp-action="Logout" class="logout-btn">Đăng xuất</a>
                     </div>
-                }
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+    }
 
     <main class="page-shell">
-        <div class="container">
-            <div class="main-card">
+        <div class="container-fluid page-container px-3 px-lg-4">
+            <div class="content-panel">
                 @RenderBody()
             </div>
         </div>
     </main>
 
     <footer class="footer-custom">
-        <div class="container">
+        <div class="container-fluid text-center">
             © 2026 - LibraryManagement | Hệ thống quản lý thư viện
         </div>
     </footer>
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
