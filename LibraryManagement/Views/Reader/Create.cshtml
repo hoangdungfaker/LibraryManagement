@@ -5,6 +5,7 @@
 }
 
 <h2 class="fw-bold text-success mb-4">➕ Thêm độc giả</h2>
+<div class="form-panel">
 
 <form asp-action="Create" method="post">
     <div class="row">
@@ -40,6 +41,7 @@
     <button type="submit" class="btn btn-success">Lưu</button>
     <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
 </form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

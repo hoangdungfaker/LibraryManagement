@@ -5,14 +5,16 @@
     var role = Context.Session.GetString("VaiTro");
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="fw-bold text-primary">🔔 Thông báo</h2>
+<div class="page-header">
+    <div class="page-header-title">
+        <h2>🔔 Thông báo hệ thống</h2>
+        <p>Quản lý thông báo gửi tới người dùng và theo dõi trạng thái đã đọc.</p>
+    </div>
 
     @if (role == "Admin" || role == "ThuThu")
     {
-        <div class="d-flex gap-2">
+        <div class="toolbar-group">
             <a asp-action="Create" class="btn btn-primary">+ Gửi thông báo</a>
-
             <form asp-action="SendOverdue" method="post">
                 @Html.AntiForgeryToken()
                 <button type="submit" class="btn btn-danger">Gửi nhắc nợ quá hạn</button>
@@ -28,69 +30,71 @@
 
 @if (!Model.Any())
 {
-    <div class="alert alert-warning">Chưa có thông báo nào.</div>
+    <div class="empty-state">Chưa có thông báo nào.</div>
 }
 else
 {
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover align-middle">
-            <thead class="table-dark">
-                <tr>
-                    <th>Mã</th>
-                    @if (role == "Admin" || role == "ThuThu")
-                    {
-                        <th>Người nhận</th>
-                        <th>Email</th>
-                    }
-                    <th>Nội dung</th>
-                    <th>Ngày gửi</th>
-                    <th>Trạng thái</th>
-                    <th>Chi tiết</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr class="@(item.DaDoc ? "" : "table-warning")">
-                        <td>@item.MaThongBao</td>
-
+    <div class="data-panel">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Mã</th>
                         @if (role == "Admin" || role == "ThuThu")
                         {
-                            <td>@item.TaiKhoan?.HoTen</td>
-                            <td>@item.TaiKhoan?.Email</td>
+                            <th>Người nhận</th>
+                            <th>Email</th>
                         }
-
-                        <td>
-                            @(item.NoiDung.Length > 80 ? item.NoiDung.Substring(0, 80) + "..." : item.NoiDung)
-                        </td>
-                        <td>@item.NgayGui.ToString("dd/MM/yyyy HH:mm")</td>
-                        <td>
-                            @if (item.DaDoc)
-                            {
-                                <span class="badge bg-success">Đã đọc</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-danger">Chưa đọc</span>
-                            }
-                        </td>
-                        <td>
-                            <a asp-action="Details" asp-route-id="@item.MaThongBao" class="btn btn-info btn-sm text-white">
-                                Xem
-                            </a>
-
-                            @if (role == "DocGia" && !item.DaDoc)
-                            {
-                                <form asp-action="MarkAsRead" method="post" class="d-inline">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="id" value="@item.MaThongBao" />
-                                    <button type="submit" class="btn btn-success btn-sm">Đánh dấu đã đọc</button>
-                                </form>
-                            }
-                        </td>
+                        <th>Nội dung</th>
+                        <th>Ngày gửi</th>
+                        <th>Trạng thái</th>
+                        <th>Chi tiết</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="@(item.DaDoc ? "" : "table-warning")">
+                            <td>@item.MaThongBao</td>
+
+                            @if (role == "Admin" || role == "ThuThu")
+                            {
+                                <td>@item.TaiKhoan?.HoTen</td>
+                                <td>@item.TaiKhoan?.Email</td>
+                            }
+
+                            <td>
+                                @(item.NoiDung.Length > 80 ? item.NoiDung.Substring(0, 80) + "..." : item.NoiDung)
+                            </td>
+                            <td>@item.NgayGui.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>
+                                @if (item.DaDoc)
+                                {
+                                    <span class="status-chip status-active">Đã đọc</span>
+                                }
+                                else
+                                {
+                                    <span class="status-chip status-locked">Chưa đọc</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="table-actions">
+                                    <a asp-action="Details" asp-route-id="@item.MaThongBao" class="btn btn-info btn-sm text-white">Xem</a>
+
+                                    @if (role == "DocGia" && !item.DaDoc)
+                                    {
+                                        <form asp-action="MarkAsRead" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@item.MaThongBao" />
+                                            <button type="submit" class="btn btn-success btn-sm">Đánh dấu</button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 }

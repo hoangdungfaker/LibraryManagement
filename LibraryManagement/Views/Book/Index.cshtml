@@ -13,32 +13,36 @@
             <div class="filter-panel">
                 <h4>📂 Bộ lọc sách</h4>
 
-                <div class="mb-3">
-                    <input id="bookSearchInput"
-                           type="text"
-                           class="form-control"
-                           placeholder="Tìm theo tên sách..."
-                           value="@keyword" />
-                </div>
+                <form method="get" asp-controller="Book" asp-action="Index">
+                    <div class="mb-3">
+                        <input id="bookSearchInput"
+                               name="keyword"
+                               type="text"
+                               class="form-control"
+                               placeholder="Tìm theo tên sách..."
+                               value="@keyword" />
+                    </div>
 
-                <div class="category-radio-list">
-                    <label>
-                        <input type="radio" name="bookCategory" value="" @(string.IsNullOrEmpty(category) ? "checked" : null) />
-                        Tất cả
-                    </label>
-
-                    @foreach (var item in categories)
-                    {
+                    <div class="category-radio-list">
                         <label>
-                            <input type="radio" name="bookCategory" value="@item" @(category == item ? "checked" : null) />
-                            @item
+                            <input type="radio" name="category" value="" @(string.IsNullOrEmpty(category) ? "checked" : null) />
+                            Tất cả
                         </label>
-                    }
-                </div>
 
-                <div class="mt-3">
-                    <button type="button" id="resetBookFilter" class="btn btn-secondary w-100">Xoá bộ lọc</button>
-                </div>
+                        @foreach (var item in categories)
+                        {
+                            <label>
+                                <input type="radio" name="category" value="@item" @(category == item ? "checked" : null) />
+                                @item
+                            </label>
+                        }
+                    </div>
+
+                    <div class="mt-3 d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                        <a asp-action="Index" class="btn btn-secondary">Xoá bộ lọc</a>
+                    </div>
+                </form>
             </div>
         </div>
 
@@ -61,12 +65,10 @@
             }
             else
             {
-                <div class="row g-4 mt-1" id="bookListContainer">
+                <div class="row g-4 mt-1">
                     @foreach (var sach in Model)
                     {
-                        <div class="col-md-6 col-xl-4 book-filter-item"
-                             data-title="@sach.TenSach"
-                             data-category="@sach.TheLoai">
+                        <div class="col-md-6 col-xl-4">
                             <div class="book-showcase-card">
                                 <div class="book-showcase-cover">📘</div>
 
@@ -82,7 +84,7 @@
                                         @if (Context.Session.GetString("VaiTro") == "Admin" || Context.Session.GetString("VaiTro") == "ThuThu")
                                         {
                                             <a asp-action="Edit" asp-route-id="@sach.MaSach" class="btn btn-warning btn-sm">Sửa</a>
-                                            <a asp-action="Delete" asp-route-id="@sach.MaSach" class="btn btn-danger btn-sm">Xoá</a>
+                                            <a asp-action="Delete" asp-route-id="@sach.MaSach" class="btn btn-danger btn-sm btn-delete-confirm">Xoá</a>
                                         }
                                     </div>
                                 </div>
@@ -94,7 +96,3 @@
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <script src="~/js/book.js" asp-append-version="true"></script>
-}

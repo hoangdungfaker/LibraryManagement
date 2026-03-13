@@ -5,7 +5,7 @@
 }
 
 <h2 class="fw-bold text-warning mb-4">✏️ Cập nhật nhân viên</h2>
-
+<div class="form-panel">
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="MaNhanVien" />
 
@@ -32,7 +32,7 @@
     <button type="submit" class="btn btn-warning">Cập nhật</button>
     <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
 </form>
-
+</div>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
