@@ -1,6 +1,8 @@
 ﻿using LibraryManagement.Data;
 using LibraryManagement.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
+using System.Text;
 
 namespace LibraryManagement.Services
 {
@@ -13,6 +15,26 @@ namespace LibraryManagement.Services
             _context = context;
         }
 
+        private string RemoveDiacritics(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+
+            var normalizedString = text.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedString)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+        }
+
         public async Task<List<Sach>> GetAllAsync()
         {
             return await _context.Sachs
@@ -20,25 +42,36 @@ namespace LibraryManagement.Services
                 .ToListAsync();
         }
 
+        // tìm kiếm sách 
         public async Task<List<Sach>> SearchAsync(string? keyword, string? category)
         {
-            var query = _context.Sachs.AsQueryable();
+            var allBooks = await _context.Sachs.ToListAsync();
+            var result = allBooks.AsEnumerable();
 
             if (!string.IsNullOrWhiteSpace(keyword))
             {
-                var lowerKeyword = keyword.Trim().ToLower();
-                query = query.Where(x => x.TenSach != null && x.TenSach.ToLower().Contains(lowerKeyword));
+                var normalizedKeyword = RemoveDiacritics(keyword.Trim()).ToLower();
+                var keywords = normalizedKeyword.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                result = result.Where(x =>
+                {
+                    if (x.TenSach == null) return false;
+
+                    var normalizedTitle = RemoveDiacritics(x.TenSach).ToLower();
+
+                    return keywords.Any(kw => normalizedTitle.Contains(kw));
+                });
             }
 
             if (!string.IsNullOrWhiteSpace(category))
             {
                 var lowerCategory = category.Trim().ToLower();
-                query = query.Where(x => x.TheLoai != null && x.TheLoai.ToLower() == lowerCategory);
+                result = result.Where(x => x.TheLoai != null && x.TheLoai.ToLower() == lowerCategory);
             }
 
-            return await query
+            return result
                 .OrderBy(x => x.TenSach)
-                .ToListAsync();
+                .ToList();
         }
 
         public async Task<Sach?> GetByIdAsync(int id)
