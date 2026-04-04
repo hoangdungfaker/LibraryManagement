@@ -1,9 +1,11 @@
 ﻿using LibraryManagement.Models.ViewModels;
 using LibraryManagement.Services;
 using Microsoft.AspNetCore.Mvc;
+using LibraryManagement.Filters;
 
 namespace LibraryManagement.Controllers
 {
+    [KiemTraQuyen]
     public class NotificationController : Controller
     {
         private readonly NotificationService _notificationService;
@@ -12,23 +14,8 @@ namespace LibraryManagement.Controllers
         {
             _notificationService = notificationService;
         }
-
-        private bool DaDangNhap()
-        {
-            return HttpContext.Session.GetInt32("MaTaiKhoan") != null;
-        }
-
-        private bool LaAdminHoacThuThu()
-        {
-            var role = HttpContext.Session.GetString("VaiTro");
-            return role == "Admin" || role == "ThuThu";
-        }
-
         public async Task<IActionResult> Index()
         {
-            if (!DaDangNhap())
-                return RedirectToAction("Login", "Account");
-
             var role = HttpContext.Session.GetString("VaiTro");
             var maTaiKhoan = HttpContext.Session.GetInt32("MaTaiKhoan") ?? 0;
 
@@ -43,11 +30,9 @@ namespace LibraryManagement.Controllers
         }
 
         [HttpGet]
+        [KiemTraQuyen("Admin", "ThuThu")]
         public async Task<IActionResult> Create()
         {
-            if (!LaAdminHoacThuThu())
-                return RedirectToAction("AccessDenied", "Account");
-
             var vm = new NotificationCreateViewModel
             {
                 DanhSachTaiKhoan = await _notificationService.GetAllTaiKhoanAsync()
@@ -58,11 +43,9 @@ namespace LibraryManagement.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [KiemTraQuyen("Admin", "ThuThu")]
         public async Task<IActionResult> Create(NotificationCreateViewModel model)
         {
-            if (!LaAdminHoacThuThu())
-                return RedirectToAction("AccessDenied", "Account");
-
             if (!ModelState.IsValid)
             {
                 model.DanhSachTaiKhoan = await _notificationService.GetAllTaiKhoanAsync();
@@ -76,9 +59,6 @@ namespace LibraryManagement.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            if (!DaDangNhap())
-                return RedirectToAction("Login", "Account");
-
             var thongBao = await _notificationService.GetByIdAsync(id);
             if (thongBao == null) return NotFound();
 
@@ -99,11 +79,9 @@ namespace LibraryManagement.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [KiemTraQuyen("Admin", "ThuThu")]
         public async Task<IActionResult> SendOverdue()
         {
-            if (!LaAdminHoacThuThu())
-                return RedirectToAction("AccessDenied", "Account");
-
             var count = await _notificationService.SendOverdueNotificationsAsync();
             TempData["Success"] = $"Đã gửi {count} thông báo quá hạn.";
             return RedirectToAction(nameof(Index));
@@ -113,9 +91,6 @@ namespace LibraryManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> MarkAsRead(int id)
         {
-            if (!DaDangNhap())
-                return RedirectToAction("Login", "Account");
-
             var thongBao = await _notificationService.GetByIdAsync(id);
             if (thongBao == null) return NotFound();
 

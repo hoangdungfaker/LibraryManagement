@@ -2,9 +2,11 @@
 using LibraryManagement.Models.ViewModels;
 using LibraryManagement.Services;
 using Microsoft.AspNetCore.Mvc;
+using LibraryManagement.Filters;
 
 namespace LibraryManagement.Controllers
 {
+    [KiemTraQuyen("Admin")]
     public class StaffController : Controller
     {
         private readonly StaffService _staffService;
@@ -14,19 +16,8 @@ namespace LibraryManagement.Controllers
             _staffService = staffService;
         }
 
-        private bool KiemTraTruyCap()
-        {
-            var maTaiKhoan = HttpContext.Session.GetInt32("MaTaiKhoan");
-            var vaiTro = HttpContext.Session.GetString("VaiTro");
-
-            return maTaiKhoan != null && vaiTro == "Admin";
-        }
-
         public async Task<IActionResult> Index()
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             var data = await _staffService.GetAllAsync();
             return View(data);
         }
@@ -34,9 +25,6 @@ namespace LibraryManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             var vm = new StaffFormViewModel
             {
                 DanhSachTaiKhoan = await _staffService.GetTaiKhoanChuaGanNhanVienAsync()
@@ -49,9 +37,6 @@ namespace LibraryManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(StaffFormViewModel model)
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             if (!ModelState.IsValid)
             {
                 model.DanhSachTaiKhoan = await _staffService.GetTaiKhoanChuaGanNhanVienAsync();
@@ -72,9 +57,6 @@ namespace LibraryManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             var nhanVien = await _staffService.GetByIdAsync(id);
             if (nhanVien == null) return NotFound();
 
@@ -100,9 +82,6 @@ namespace LibraryManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(StaffFormViewModel model)
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             if (!ModelState.IsValid)
             {
                 model.DanhSachTaiKhoan = await _staffService.GetTaiKhoanChuaGanNhanVienAsync();
@@ -123,9 +102,6 @@ namespace LibraryManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             var nhanVien = await _staffService.GetByIdAsync(id);
             if (nhanVien == null) return NotFound();
 
@@ -135,9 +111,6 @@ namespace LibraryManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             var nhanVien = await _staffService.GetByIdAsync(id);
             if (nhanVien == null) return NotFound();
 
@@ -148,9 +121,6 @@ namespace LibraryManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             var result = await _staffService.DeleteAsync(id);
             if (!result)
             {

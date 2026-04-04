@@ -2,9 +2,11 @@
 using LibraryManagement.Models.ViewModels;
 using LibraryManagement.Services;
 using Microsoft.AspNetCore.Mvc;
+using LibraryManagement.Filters;
 
 namespace LibraryManagement.Controllers
 {
+    [KiemTraQuyen("Admin", "ThuThu")]
     public class ReaderController : Controller
     {
         private readonly ReaderService _readerService;
@@ -14,19 +16,8 @@ namespace LibraryManagement.Controllers
             _readerService = readerService;
         }
 
-        private bool KiemTraTruyCap()
-        {
-            var maTaiKhoan = HttpContext.Session.GetInt32("MaTaiKhoan");
-            var vaiTro = HttpContext.Session.GetString("VaiTro");
-
-            return maTaiKhoan != null && (vaiTro == "Admin" || vaiTro == "ThuThu");
-        }
-
         public async Task<IActionResult> Index()
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             var data = await _readerService.GetAllAsync();
             return View(data);
         }
@@ -34,9 +25,6 @@ namespace LibraryManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             var vm = new ReaderFormViewModel
             {
                 DanhSachTaiKhoan = await _readerService.GetTaiKhoanChuaGanDocGiaAsync()
@@ -49,9 +37,6 @@ namespace LibraryManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ReaderFormViewModel model)
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             if (await _readerService.IsMaSinhVienExistsAsync(model.MaSinhVien))
             {
                 ModelState.AddModelError("MaSinhVien", "Mã sinh viên đã tồn tại.");
@@ -79,9 +64,6 @@ namespace LibraryManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             var docGia = await _readerService.GetByIdAsync(id);
             if (docGia == null) return NotFound();
 
@@ -109,8 +91,6 @@ namespace LibraryManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ReaderFormViewModel model)
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
 
             if (await _readerService.IsMaSinhVienExistsAsync(model.MaSinhVien, model.MaDocGia))
             {
@@ -139,9 +119,6 @@ namespace LibraryManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             var docGia = await _readerService.GetByIdAsync(id);
             if (docGia == null) return NotFound();
 
@@ -151,9 +128,6 @@ namespace LibraryManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             var docGia = await _readerService.GetByIdAsync(id);
             if (docGia == null) return NotFound();
 
@@ -164,8 +138,6 @@ namespace LibraryManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
 
             var result = await _readerService.DeleteAsync(id);
             if (!result)

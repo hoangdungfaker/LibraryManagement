@@ -2,9 +2,11 @@
 using LibraryManagement.Models.ViewModels;
 using LibraryManagement.Services;
 using Microsoft.AspNetCore.Mvc;
+using LibraryManagement.Filters;
 
 namespace LibraryManagement.Controllers
 {
+    [KiemTraQuyen("Admin", "ThuThu")]
     public class LibraryCardController : Controller
     {
         private readonly LibraryCardService _cardService;
@@ -14,17 +16,8 @@ namespace LibraryManagement.Controllers
             _cardService = cardService;
         }
 
-        private bool KiemTraTruyCap()
-        {
-            var role = HttpContext.Session.GetString("VaiTro");
-            return role == "Admin" || role == "ThuThu";
-        }
-
         public async Task<IActionResult> Index()
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             var data = await _cardService.GetAllAsync();
             return View(data);
         }

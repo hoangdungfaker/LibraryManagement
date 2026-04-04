@@ -1,8 +1,10 @@
 ﻿using LibraryManagement.Services;
 using Microsoft.AspNetCore.Mvc;
+using LibraryManagement.Filters;
 
 namespace LibraryManagement.Controllers
 {
+    [KiemTraQuyen("Admin")]
     public class ReportController : Controller
     {
         private readonly ReportService _reportService;
@@ -11,20 +13,8 @@ namespace LibraryManagement.Controllers
         {
             _reportService = reportService;
         }
-
-        private bool KiemTraTruyCap()
-        {
-            var maTaiKhoan = HttpContext.Session.GetInt32("MaTaiKhoan");
-            var vaiTro = HttpContext.Session.GetString("VaiTro");
-
-            return maTaiKhoan != null && vaiTro == "Admin";
-        }
-
         public async Task<IActionResult> Index()
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             var model = await _reportService.GetTongQuanAsync();
             return View(model);
         }
