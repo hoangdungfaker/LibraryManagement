@@ -1,9 +1,11 @@
 ﻿using LibraryManagement.Models.ViewModels;
 using LibraryManagement.Services;
 using Microsoft.AspNetCore.Mvc;
+using LibraryManagement.Filters;
 
 namespace LibraryManagement.Controllers
 {
+    [KiemTraQuyen]
     public class BorrowController : Controller
     {
         private readonly BorrowService _borrowService;
@@ -12,33 +14,17 @@ namespace LibraryManagement.Controllers
         {
             _borrowService = borrowService;
         }
-
-        private bool LaAdminHoacThuThu()
-        {
-            var role = HttpContext.Session.GetString("VaiTro");
-            return role == "Admin" || role == "ThuThu";
-        }
-
-        private bool DaDangNhap()
-        {
-            return HttpContext.Session.GetInt32("MaTaiKhoan") != null;
-        }
-
+        [KiemTraQuyen("Admin", "ThuThu")]
         public async Task<IActionResult> Index()
         {
-            if (!LaAdminHoacThuThu())
-                return RedirectToAction("AccessDenied", "Account");
-
             var data = await _borrowService.GetAllAsync();
             return View(data);
         }
 
         [HttpGet]
+        [KiemTraQuyen("Admin", "ThuThu")]
         public async Task<IActionResult> Create()
         {
-            if (!LaAdminHoacThuThu())
-                return RedirectToAction("AccessDenied", "Account");
-
             var vm = new BorrowCreateViewModel
             {
                 HanTra = DateTime.Today.AddDays(14),
@@ -52,11 +38,9 @@ namespace LibraryManagement.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [KiemTraQuyen("Admin", "ThuThu")]
         public async Task<IActionResult> Create(BorrowCreateViewModel model)
         {
-            if (!LaAdminHoacThuThu())
-                return RedirectToAction("AccessDenied", "Account");
-
             if (!ModelState.IsValid)
             {
                 model.DanhSachThe = await _borrowService.GetTheHopLeAsync();
@@ -86,45 +70,37 @@ namespace LibraryManagement.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            if (!DaDangNhap())
-                return RedirectToAction("Login", "Account");
-
             var phieu = await _borrowService.GetByIdAsync(id);
             if (phieu == null) return NotFound();
+            var role = HttpContext.Session.GetString("VaiTro");
+            var maTaiKhoan = HttpContext.Session.GetInt32("MaTaiKhoan") ?? 0;
 
+            if (role == "DocGia" && phieu.TheThuVien.DocGia.MaTaiKhoan != maTaiKhoan)
+            {
+                return RedirectToAction("AccessDenied", "Account");
+            }
             return View(phieu);
         }
 
+        [KiemTraQuyen("DocGia")]
         public async Task<IActionResult> History()
         {
-            if (!DaDangNhap())
-                return RedirectToAction("Login", "Account");
-
             var maTaiKhoan = HttpContext.Session.GetInt32("MaTaiKhoan") ?? 0;
-            var role = HttpContext.Session.GetString("VaiTro");
-
-            if (role != "DocGia")
-                return RedirectToAction("AccessDenied", "Account");
-
             var data = await _borrowService.GetHistoryByDocGiaAsync(maTaiKhoan);
             return View(data);
         }
+        [KiemTraQuyen("Admin", "ThuThu")]
         public async Task<IActionResult> ReturnList()
         {
-            if (!LaAdminHoacThuThu())
-                return RedirectToAction("AccessDenied", "Account");
-
             await _borrowService.MarkOverdueAsync();
             var data = await _borrowService.GetDangMuonAsync();
             return View(data);
         }
 
         [HttpGet]
+        [KiemTraQuyen("Admin", "ThuThu")]
         public async Task<IActionResult> Return(int maPhieu, int maCuon)
         {
-            if (!LaAdminHoacThuThu())
-                return RedirectToAction("AccessDenied", "Account");
-
             var phieu = await _borrowService.GetByIdAsync(maPhieu);
             if (phieu == null) return NotFound();
 
@@ -145,11 +121,9 @@ namespace LibraryManagement.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [KiemTraQuyen("Admin", "ThuThu")]
         public async Task<IActionResult> Return(LibraryManagement.Models.ViewModels.ReturnBookViewModel model)
         {
-            if (!LaAdminHoacThuThu())
-                return RedirectToAction("AccessDenied", "Account");
-
             if (!ModelState.IsValid)
             {
                 var phieuInvalid = await _borrowService.GetByIdAsync(model.MaPhieu);
@@ -172,21 +146,18 @@ namespace LibraryManagement.Controllers
             TempData["Success"] = result.Message;
             return RedirectToAction(nameof(ReturnList));
         }
+
+        [KiemTraQuyen("Admin", "ThuThu")]
         public async Task<IActionResult> RenewList()
         {
-            if (!LaAdminHoacThuThu())
-                return RedirectToAction("AccessDenied", "Account");
-
             var data = await _borrowService.GetCoTheGiaHanAsync();
             return View(data);
         }
 
         [HttpGet]
+        [KiemTraQuyen("Admin", "ThuThu")]
         public async Task<IActionResult> Renew(int id)
         {
-            if (!LaAdminHoacThuThu())
-                return RedirectToAction("AccessDenied", "Account");
-
             var phieu = await _borrowService.GetByIdAsync(id);
             if (phieu == null) return NotFound();
 
@@ -204,11 +175,9 @@ namespace LibraryManagement.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [KiemTraQuyen("Admin", "ThuThu")]
         public async Task<IActionResult> Renew(LibraryManagement.Models.ViewModels.RenewBorrowViewModel model)
         {
-            if (!LaAdminHoacThuThu())
-                return RedirectToAction("AccessDenied", "Account");
-
             if (!ModelState.IsValid)
             {
                 ViewBag.Phieu = await _borrowService.GetByIdAsync(model.MaPhieu);

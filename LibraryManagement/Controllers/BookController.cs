@@ -1,9 +1,11 @@
 ﻿using LibraryManagement.Models.Entities;
 using LibraryManagement.Services;
 using Microsoft.AspNetCore.Mvc;
+using LibraryManagement.Filters;
 
 namespace LibraryManagement.Controllers
 {
+    [KiemTraQuyen]
     public class BookController : Controller
     {
         private readonly BookService _bookService;
@@ -12,20 +14,8 @@ namespace LibraryManagement.Controllers
         {
             _bookService = bookService;
         }
-
-        private bool KiemTraTruyCap()
-        {
-            var maTaiKhoan = HttpContext.Session.GetInt32("MaTaiKhoan");
-            var vaiTro = HttpContext.Session.GetString("VaiTro");
-
-            return maTaiKhoan != null && (vaiTro == "Admin" || vaiTro == "ThuThu");
-        }
-
         public async Task<IActionResult> Index(string? keyword, string? category)
         {
-            if (HttpContext.Session.GetInt32("MaTaiKhoan") == null)
-                return RedirectToAction("Login", "Account");
-
             var dsSach = await _bookService.SearchAsync(keyword, category);
             var categories = await _bookService.GetCategoriesAsync();
 
@@ -37,21 +27,17 @@ namespace LibraryManagement.Controllers
         }
 
         [HttpGet]
+        [KiemTraQuyen("Admin","ThuThu")]
         public IActionResult Create()
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [KiemTraQuyen("Admin", "ThuThu")]
         public async Task<IActionResult> Create(Sach sach)
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             if (!ModelState.IsValid)
                 return View(sach);
 
@@ -61,11 +47,9 @@ namespace LibraryManagement.Controllers
         }
 
         [HttpGet]
+        [KiemTraQuyen("Admin", "ThuThu")]
         public async Task<IActionResult> Edit(int id)
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             var sach = await _bookService.GetByIdAsync(id);
             if (sach == null)
                 return NotFound();
@@ -75,11 +59,9 @@ namespace LibraryManagement.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [KiemTraQuyen("Admin", "ThuThu")]
         public async Task<IActionResult> Edit(Sach sach)
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             if (!ModelState.IsValid)
                 return View(sach);
 
@@ -100,11 +82,9 @@ namespace LibraryManagement.Controllers
         }
 
         [HttpGet]
+        [KiemTraQuyen("Admin", "ThuThu")]
         public async Task<IActionResult> Delete(int id)
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             var sach = await _bookService.GetByIdAsync(id);
             if (sach == null)
                 return NotFound();
@@ -114,11 +94,9 @@ namespace LibraryManagement.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [KiemTraQuyen("Admin", "ThuThu")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (!KiemTraTruyCap())
-                return RedirectToAction("AccessDenied", "Account");
-
             var result = await _bookService.DeleteAsync(id);
             if (!result)
             {
@@ -133,9 +111,6 @@ namespace LibraryManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            if (HttpContext.Session.GetInt32("MaTaiKhoan") == null)
-                return RedirectToAction("Login", "Account");
-
             var sach = await _bookService.GetByIdAsync(id);
             if (sach == null)
                 return NotFound();
